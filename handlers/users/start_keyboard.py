@@ -49,10 +49,10 @@ main_menu = KeyboardButton('Главное меню🗂')
 payments_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(any_card, tinkoff_sbor, main_menu)
 
 
-pay_2500_any = KeyboardButton('Оплатить 2500₽')
+pay_2500_any = KeyboardButton('Оплатить 2800₽')
 main_menu = KeyboardButton('Главное меню🗂')
 any_card_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay_2500_any, main_menu)
 
-pay_2500_sbor = KeyboardButton('Oплатить 2500₽')
+pay_2500_sbor = KeyboardButton('Oплатить 2800₽')
 main_menu = KeyboardButton('Главное меню🗂')
 tinkoff_sbor_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay_2500_sbor, main_menu)

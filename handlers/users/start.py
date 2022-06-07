@@ -210,15 +210,18 @@ async def contact_tp(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑")
 async def contact_tp(message: types.Message):
-    await message.reply('<a href="https://clicks.su/">Any card</a>', parse_mode="HTML")
+    await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.\n\n'
+'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
+'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇\n\n'
+'По всем вопросам: @AndreasBel_admin\n\n')
 
 
-@dp.message_handler(lambda message: message.text == 'Оплатить 2500₽')
+@dp.message_handler(lambda message: message.text == 'Оплатить 2800₽')
 async def any_card(message: types.Message):
     await message.reply('<a href="https://clicks.su/gx7zl1">Any card</a>', parse_mode="HTML")
 
 
-@dp.message_handler(lambda message: message.text == 'Oплатить 2500₽')
+@dp.message_handler(lambda message: message.text == 'Oплатить 2800₽')
 async def any_card(message: types.Message):
     await message.reply('<a href="https://clicks.su/9qGqRg">Tinkoff sbor</a>', parse_mode="HTML")
-    await message.reply('Псоле осуществления перевода отправьте чек администратору бота @AndreasBel_admin')
+    await message.reply('Псоле осуществления перевода отправьте чек администратору бота: @AndreasBel_admin')
