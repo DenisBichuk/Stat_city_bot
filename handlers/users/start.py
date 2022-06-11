@@ -1,49 +1,7 @@
 from aiogram import types
-from aiogram.types import InputFile
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from loader import dp, bot
-from . import start_keyboard as kb
 
+from loader import dp
 
-class FSMProf(StatesGroup):
-    prof_pay_and_get = State()
-    prof_pay = State()
-    prof_any_card = State()
-    prof_tinkoff_sbor = State()
-    pay_2800_any = State()
-    pay_2800_sbor = State()
-
-class FSMPrem(StatesGroup):
-    prem_pay_and_get = State()
-    prem_pay = State()
-    prem_any_card = State()
-    prem_tinkoff_sbor = State()
-    pay_2800_any = State()
-    pay_2800_sbor = State()
-
-class FSMComposite(StatesGroup):
-    composite_pay_and_get = State()
-    composite_pay = State()
-    composite_any_card = State()
-    composite_tinkoff_sbor = State()
-    pay_2500_any = State()
-    pay_2500_sbor = State()
-
-class FSMTop(StatesGroup):
-    top_pay_and_get = State()
-    top_pay = State()
-    top_any_card = State()
-    top_tinkoff_sbor = State()
-    pay_3500_any = State()
-    pay_3500_sbor = State()
-
-class FSMTotalDom(StatesGroup):
-    total_dom_pay_and_get = State()
-    total_dom_pay = State()
-    total_dom_any_card = State()
-    total_dom_tinkoff_sbor = State()
-    pay_4000_any = State()
-    pay_4000_sbor = State()
 
 @dp.message_handler(commands=['start'])
 async def bot_start(message: types.Message):
@@ -87,7 +45,7 @@ async def about(message: types.Message):
                          reply_markup=kb.chat_and_reviews_kb)
 
 
-@dp.message_handler(lambda message: message.text == "В Топе на маркетплейс 8.0🔥", state=FSMTop.top_pay_and_get)
+@dp.message_handler(lambda message: message.text == "В Топе на маркетплейс 8.0🔥")
 async def top(message: types.Message):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/top.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
@@ -108,51 +66,11 @@ async def top(message: types.Message):
                          "МОДУЛЬ 8✅ - OZON ТОЖЕ КАЧНЕМ\n\n"
                          "МОДУЛЬ 9✅ - СИСТЕМАТИЗАЦИЯ БИЗНЕСА И УПРАВЛЕНИЕ КОМАНДОЙ\n\n"
                          "+ Созвоны по ZOOM\n\n"
-                         "Стоимость курса - 3500₽", reply_markup=kb.top_pay_and_get_kb)
-    await FSMTop.next()
+                         "Стоимость курса - 3500₽", reply_markup=kb.top_at_kb)
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить и получить доступ✅", state=FSMTop.top_pay)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Выберите способ оплаты:', reply_markup=kb.top_pay_kb)
-
-
-@dp.message_handler(lambda message: message.text == "Любой картой✅", state=FSMTop.top_any_card)
-async def top_any_card(message: types.Message):
-    await message.reply('Вы производите оплату курса Лео Шевченко 8.0', reply_markup=kb.pay_3500_kb)
-    await FSMTop.next()
-
-
-@dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑", state=FSMTop.top_any_card)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату курса Лео Шевченко 8.0\n\n'
-'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
-'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-'По всем вопросам: @AndreasBel_admin)\n\n', reply_markup=kb.pay_3500_kb)
-    await FSMTop.next()
-    await FSMTop.next()
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 3500₽", state=FSMTop.pay_3500_any)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/mVejzQ>Any card</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 3500₽", state=FSMTop.pay_3500_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/yRjNAy>Tinkoff Sbor</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Тотальное доминирование на МП🦾🔝", state=FSMTotalDom.total_dom_pay_and_get)
-async def total_dom(message: types.Message):
+@dp.message_handler(lambda message: message.text == "Тотальное доминирование на МП🦾🔝")
+async def top(message: types.Message):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer("Дорогие участники!\n\n"
@@ -172,61 +90,28 @@ async def total_dom(message: types.Message):
                          "МОДУЛЬ 10✅ - Продажа бизнеса\n\n\n"
                          "🔸общие групповые созвоны\n"
                          "🔸сео оптимизация от Павла Шевченко\n"
-                         "🔸итоговое мероприятие, контакты", reply_markup=kb.total_dom_pay_and_get_kb)
-    await FSMTotalDom.next()
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить и получить доступ✅", state=FSMTotalDom.total_dom_pay)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Выберите способ оплаты:', reply_markup=kb.total_dom_pay_kb)
-
-
-@dp.message_handler(lambda message: message.text == "Любой картой✅", state=FSMTotalDom.total_dom_any_card)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".', reply_markup=kb.pay_4000_kb)
-    await FSMTotalDom.next()
-
-
-@dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑", state=FSMTotalDom.total_dom_tinkoff_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".\n\n'
-'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
-'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-'По всем вопросам: @AndreasBel_admin)\n\n', reply_markup=kb.pay_4000_kb)
-    await FSMTotalDom.next()
-    await FSMTotalDom.next()
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 4000₽", state=FSMTotalDom.pay_4000_any)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/yoJ7R0>Any card</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 4000₽", state=FSMTotalDom.pay_4000_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/yM5vEy>Tinkoff Sbor</a>', parse_mode='HTML')
+                         "🔸итоговое мероприятие, контакты", reply_markup=kb.total_dom_kb)
 
 
 @dp.message_handler(lambda message: message.text == "Обратится в поддержку✍")
 async def top(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
+    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Вы можете написать администратору либо обратиться с вопросом в чат складчины:',
                          reply_markup=kb.tp_kb)
 
 
-@dp.message_handler(lambda message: message.text == "MPstats(Профессиональный)💹", state=FSMProf.prof_pay_and_get)
-async def prof_tarif(message: types.Message):
+from aiogram import types
+from aiogram.dispatcher import FSMContext
+from aiogram.types import InputFile
+
+from loader import dp, bot
+from . import start_keyboard as kb
+from .states import FSMProf
+
+
+@dp.message_handler(lambda message: message.text == "MPstats(Профессиональный)💹")
+async def info(message: types.Message):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Mpstats (Тариф "Профессиональный")🚀️\n\n\n'
@@ -245,55 +130,76 @@ async def prof_tarif(message: types.Message):
                          "🔸Можете добавить свой Api ключ из Wildberries\n\n "
                          "🔸Без очередей и с удобного вам браузера и устройства Macbook, IPhone, Windows, Android\n\n "
                          "🔸Не нужно скачивать никаких программ и прочих некомфортных действий",
-                         reply_markup=kb.prof_pay_and_get_kb)
-    await FSMProf.next()
+                         reply_markup=kb.tarifs_kb)
+    await FSMProf.prof_pay_and_get.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить и получить доступ✅", state=FSMProf.prof_pay)
-async def top_any_card(message: types.Message):
+@dp.message_handler(lambda message: message.text == "MPstats(Профессиональный)💹")
+async def info(message: types.Message):
+    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('Mpstats (Тариф "Профессиональный")🚀️\n\n\n'
+                         '✔️ Тариф "Профессиональный"\n'
+                         '✔️ Цена - 2800₽ в месяц / вместо 28.000₽\n'
+                         '✔️ Никакого графика и очередей\n\n'
+                         '(Окно выборки данных: 91 день)\n\n\n'
+                         '✅Пользоваться можно без ограничений\n\n'
+                         '✅Работает 24 часа в сутки\n\n'
+                         '✅Отдельный закрытый чат для общения и поддержки по MPstats\n\n\n'
+                         '❗️Вам будет выдан личный логин и пароль, благодаря такой системе входа вы не будете вылетать и полноценно сможете пользоваться сервисом.\n\n'
+                         'После оплаты с вами свяжется менеджер и проведет проверку на подставного покупателя, это происходит быстро. 😊\n\n\n'
+                         "💥Новый метод входа в WEB MPSTATS !\n\n"
+                         "🔸НЕ ВЫЛЕТАЕТ ИЗ МПСТАТ\n\n "
+                         '🔸Работает плагин мпстат c кнопой "Открыть в MPstats"\n\n'
+                         "🔸Можете добавить свой Api ключ из Wildberries\n\n "
+                         "🔸Без очередей и с удобного вам браузера и устройства Macbook, IPhone, Windows, Android\n\n "
+                         "🔸Не нужно скачивать никаких программ и прочих некомфортных действий",
+                         reply_markup=kb.tarifs_kb)
+    await FSMProf.prof_pay_and_get.set()
+
+
+@dp.message_handler(state=FSMProf.prof_pay_and_get)
+async def pay_choise(message: types.Message, state: FSMContext):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Выберите способ оплаты:', reply_markup=kb.prof_pay_kb)
-    await FSMProf.next()
+    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
+    prof_pay_choise = message.text
+    await state.update_data({'choise': prof_pay_choise})
+    await FSMProf.prof_pay_choise.set()
 
 
-@dp.message_handler(lambda message: message.text == "Любой картой✅", state=FSMProf.prof_any_card)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.', reply_markup=kb.prof_pay_2800_kb)
-    await FSMProf.next()
+@dp.message_handler(state=FSMProf.prof_pay_choise)
+async def prof_pay_choise(message: types.Message, state=FSMContext):
+    data = await state.get_data()
+    choise = data.get('choise')
+    if choise == 'Любой картой✅':
+        await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.',
+                            reply_markup=kb.pay_2800_any)
+        await FSMProf.prof_pay_2800_any.set()
+    elif choise == 'Тинькофф Сбор☑':
+        await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.\n\n'
+                            '🚫Обязательно указать комментарий: на путешествие, на отдыхn\n\n'
+                            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇\n\n'
+                            'По всем вопросам: @AndreasBel_admin)', reply_markup=kb.pay_2800_sbor)
+        await FSMProf.prof_pay_2800_sbor.set()
 
 
-@dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑", state=FSMProf.prof_tinkoff_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней."\n\n'
-'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
-'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-'По всем вопросам: @AndreasBel_admin)\n\n', reply_markup=kb.prof_pay_2800_kb)
-    await FSMProf.next()
-    await FSMProf.next()
+@dp.message_handler(state=FSMProf.prof_pay_2800_any)
+async def pay_2800_any(message: types.Message, state=FSMContext):
+    await message.reply('<a href="https://clicks.su/mjqPMX">Any card</a>', parse_mode="HTML")
+    await state.finish()
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить 2800₽", state=FSMProf.pay_2800_any)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/mjqPMX>Any card</a>', parse_mode='HTML')
+@dp.message_handler(state=FSMProf.prof_pay_2800_sbor)
+async def pay_2800_any(message: types.Message, state=FSMContext):
+    await message.reply('<a href="https://clicks.su/9qGqRg">Tinkoff Sbor</a>')
+    await message.reply('Псоле осуществления перевода отправьте чек администратору бота: @AndreasBel_admin', parse_mode="HTML")
+    await state.finish()
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить 2800₽", state=FSMProf.pay_2800_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/9qGqRg>Tinkoff Sbor</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Moneyplace(Premium)📈", state=FSMPrem.prem_pay_and_get)
+@dp.message_handler(lambda message: message.text == "Moneyplace(Premium)📈")
 async def prem_tarif(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
+    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Moneyplace (Тариф "Premium") 🚀\n\n'
                          '✔️ Тариф "Premium"\n'
@@ -309,54 +215,12 @@ async def prem_tarif(message: types.Message):
                          '🔸Можете добавить свой Api ключ из Wildberries\n\n'
                          '🔸Без очередей и с удобного вам браузера и устройства Macbook, IPhone, Windows, Android\n\n'
                          '🔸Не нужно скачивать никаких программ и прочих некомфортных действий\n\n'
-                         '🔸Наша команда гарантирует помощь при любых проблемах', reply_markup=kb.prem_pay_and_get_kb)
+                         '🔸Наша команда гарантирует помощь при любых проблемах', reply_markup=kb.tarifs_kb)
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить и получить доступ✅", state=FSMPrem.prem_pay)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Выберите способ оплаты:', reply_markup=kb.prem_pay_kb)
-    await FSMPrem.next()
-
-
-@dp.message_handler(lambda message: message.text == "Любой картой✅", state=FSMPrem.prem_any_card)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней.', reply_markup=kb.prem_pay_2800_kb)
-    await FSMProf.next()
-
-
-@dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑", state=FSMPrem.prem_tinkoff_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней."\n\n'
-'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
-'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-'По всем вопросам: @AndreasBel_admin)\n\n', reply_markup=kb.prem_pay_2800_kb)
-    await FSMPrem.next()
-    await FSMPrem.next()
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 2800₽", state=FSMPrem.pay_2800_any)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/mjqPMX>Any card</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 2800₽", state=FSMPrem.pay_2800_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/9qGqRg>Tinkoff Sbor</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "MarketGuru(Комбинированый)📉", state=FSMPrem.prem_pay_and_get)
-async def composite_tarif(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
+@dp.message_handler(lambda message: message.text == "MarketGuru(Комбинированый)📉")
+async def prem_tarif(message: types.Message):
+    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Личный аккаунт MarketGuru по стоимости 2500₽ (вместо 12700₽)\n\n'
                          '✔️ Тариф "Комбинированный"\n'
@@ -367,60 +231,37 @@ async def composite_tarif(message: types.Message):
                          '✅Отдельный закрытый чат для общения\n\n'
                          '❗️Вам будет выдан личный логин и пароль, благодаря такой системе входа вы не будете вылетать и полноценно сможете пользоваться сервисом.\n\n'
                          'После оплаты с вами свяжется менеджер и проведет проверку на подставного покупателя, это происходит быстро. 😊',
-                         reply_markup=kb.composite_pay_and_get_kb)
+                         reply_markup=kb.tarifs_kb)
 
 
-@dp.message_handler(lambda message: message.text == "Оплатить и получить доступ✅", state=FSMComposite.composite_pay)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Выберите способ оплаты:', reply_markup=kb.composite_pay_kb)
-    await FSMComposite.next()
-
-
-@dp.message_handler(lambda message: message.text == "Любой картой✅", state=FSMComposite.composite_any_card)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису MarketGuru (Тариф "Комбинированный") на 30 дней.', reply_markup=kb.pay_2500_kb)
-    await FSMComposite.next()
-
-
-@dp.message_handler(lambda message: message.text == "Тинькофф Сбор☑", state=FSMComposite.composite_tinkoff_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('Вы производите оплату доступа к сервису MarketGuru (Тариф "Комбинированный") на 30 дней."\n\n'
-'🚫Обязательно указать комментарий: на путешествие, на отдых\n\n' 
-'❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-'По всем вопросам: @AndreasBel_admin)\n\n', reply_markup=kb.pay_2500_kb)
-    await FSMComposite.next()
-    await FSMComposite.next()
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 2500₽", state=FSMComposite.pay_2500_any)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/gx7zL1>Any card</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Оплатить 2500₽", state=FSMComposite.pay_2500_sbor)
-async def top_any_card(message: types.Message):
-    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/payments.jpg')
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/9qGqRg>Tinkoff Sbor</a>', parse_mode='HTML')
-
-
-@dp.message_handler(lambda message: message.text == "Чат👥")
-async def about(message: types.Message):
+@dp.message_handler(lambda message: message.text == "Главное меню🗂", state='*')
+async def main_menu(message: types.Message):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/ydaaKg>Chat</a>', parse_mode='HTML')
+    await message.answer(
+        f"Привет, Denis! Рады вас видеть😊 \n \n С помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
+        reply_markup=kb.start_kb)
 
 
-@dp.message_handler(lambda message: message.text == "Написать в тех.поддержку✍")
-async def about(message: types.Message):
+@dp.message_handler(lambda message: message.text == "Выбрать сервис💹")
+async def tarifs(message: types.Message):
     photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/bot_photo.jpg')
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.reply('<a href= https://clicks.su/yYllW9>Help</a>', parse_mode='HTML')
+    await message.answer('Выберите интересующий вас сервис из доступных на данный момент:', reply_markup=kb.analitic_kb)
+
+
+@dp.message_handler(lambda message: message.text == 'Чат👥')
+async def contact_tp(message: types.Message):
+    await message.reply('<a href="https://clicks.su/ydaaKg">Chat</a>', parse_mode="HTML")
+
+
+@dp.message_handler(lambda message: message.text == 'Отзывы💬')
+async def contact_tp(message: types.Message):
+    await message.reply('<a href="https://clicks.su/m0xm1m">Rewievs</a>', parse_mode="HTML")
+
+
+@dp.message_handler(lambda message: message.text == "Написать в тех. подержку✍")
+async def top(message: types.Message):
+    photo = InputFile('D:/Downloads/PYTHON/telebot/handlers/users/total_dom.jpg')
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('<a href="https://clicks.su/yYllW9">Help</a>', parse_mode="HTML")
