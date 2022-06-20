@@ -1,4 +1,4 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton
 
 analitics = KeyboardButton('Выбрать сервис аналитики📊')
 about = KeyboardButton('О складчине💭')
@@ -15,7 +15,7 @@ composite = KeyboardButton('MarketGuru(Комбинированый)📉')
 main_menu = KeyboardButton('Главное меню🗂')
 analitic_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(professional, premium, composite, main_menu)
 
-choise = KeyboardButton('Выбрать сервис💹')
+choise = KeyboardButton('Выбрать сервис аналитики📊')
 main_menu = KeyboardButton('Главное меню🗂')
 about_sklad_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(choise, main_menu)
 
@@ -48,11 +48,5 @@ tinkoff_sbor = KeyboardButton('Тинькофф Сбор☑')
 main_menu = KeyboardButton('Главное меню🗂')
 payments_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(any_card, tinkoff_sbor, main_menu)
 
-
-pay_2800_any = KeyboardButton('Оплатить 2800₽')
 main_menu = KeyboardButton('Главное меню🗂')
-any_card_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay_2800_any, main_menu)
-
-pay_2800_sbor = KeyboardButton('Oплатить 2800₽')
-main_menu = KeyboardButton('Главное меню🗂')
-tinkoff_sbor_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay_2800_sbor, main_menu)
+main_menu_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(main_menu)
