@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import InputFile
 
+from data import config
 from loader import dp, bot
 from . import start_keyboard as kb
 from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom
@@ -13,7 +13,7 @@ async def bot_start(message: types.Message):
     photo = 'AgACAgIAAxkBAAIGo2K1vTRbMOUDINXa_3Hiz-seBaBXAAJlujEbyVuwSfjF4PP9_JKcAQADAgADcwADKQQ'
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer(
-        f"Привет, {message.from_user.full_name} Рады вас видеть😊 \n \n С помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
+        f"Привет, {message.from_user.full_name} Рады вас видеть😊\n\nС помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
         reply_markup=kb.start_kb)
 
 
@@ -101,6 +101,21 @@ async def any_or_sbor(message: types.Message, state: FSMContext):
                             'По всем вопросам: @AndreasBel_admin')
         await message.reply('<a href="https://clicks.su/yRjNAy">Оплатить 3500₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await FSMTop.top_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMTop.top_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) Лео Шевченко 8.0✅')
     await state.finish()
 
 
@@ -154,6 +169,21 @@ async def any_or_sbor(message: types.Message, state: FSMContext):
                             'По всем вопросам: @AndreasBel_admin')
         await message.reply('<a href="https://clicks.su/yM5vEy">Оплатить 4000₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await FSMTotalDom.total_dom_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMTotalDom.total_dom_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) "Тотальное доминирование на маркетплейсах"✅')
     await state.finish()
 
 
@@ -213,6 +243,21 @@ async def any_or_sbor(message: types.Message, state: FSMContext):
                             'По всем вопросам: @AndreasBel_admin')
         await message.reply('<a href="https://clicks.su/9qGqRg">Оплатить 2800₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await FSMProf.prof_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMProf.prof_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) Mpstats✅')
     await state.finish()
 
 
@@ -262,6 +307,21 @@ async def any_or_sbor(message: types.Message, state: FSMContext):
                             'По всем вопросам: @AndreasBel_admin')
         await message.reply('<a href="https://clicks.su/9eJ2aZ">Оплатить 2800₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await FSMPrem.prem_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMPrem.prem_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) Moneyplace✅')
     await state.finish()
 
 
@@ -307,6 +367,21 @@ async def any_or_sbor(message: types.Message, state: FSMContext):
             'По всем вопросам: @AndreasBel_admin')
         await message.reply('<a href="https://clicks.su/9qGqRg">Оплатить 2500₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await FSMComposite.composite_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMComposite.composite_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) MarketGuru✅')
     await state.finish()
 
 
@@ -335,6 +410,6 @@ async def contact_tp(message: types.Message):
 @dp.message_handler(lambda message: message.text == "Написать в тех. подержку✍", state='*')
 async def top(message: types.Message):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = InputFile('D:\\Downloads\\PYTHON\\Stat_city_bot\\handlers\\users\\bot_photo.jpg')
+    photo = 'AgACAgIAAxkBAAIGo2K1vTRbMOUDINXa_3Hiz-seBaBXAAJlujEbyVuwSfjF4PP9_JKcAQADAgADcwADKQQ'
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('<a href="https://clicks.su/yYllW9">Help</a>', parse_mode="HTML")
