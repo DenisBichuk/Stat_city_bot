@@ -9,6 +9,7 @@ from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom
 
 @dp.message_handler(commands=['start'])
 async def bot_start(message: types.Message):
+    print(message.chat.id)
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     photo = 'AgACAgIAAxkBAAIGo2K1vTRbMOUDINXa_3Hiz-seBaBXAAJlujEbyVuwSfjF4PP9_JKcAQADAgADcwADKQQ'
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
@@ -52,10 +53,20 @@ async def about(message: types.Message):
                          reply_markup=kb.chat_and_reviews_kb)
 
 
+@dp.message_handler(content_types=['photo'], state='*')
+async def scan_message(msg: types.Message):
+    document_id = msg.photo[0].file_id
+    file_info = await bot.get_file(document_id)
+    print(f'file_id: {file_info.file_id}')
+    print(f'file_path: {file_info.file_path}')
+    print(f'file_size: {file_info.file_size}')
+    print(f'file_unique_id: {file_info.file_unique_id}')
+
+
 @dp.message_handler(lambda message: message.text == "В Топе на маркетплейс 8.0🔥", state='*')
 async def top(message: types.Message):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = "AgACAgIAAxkBAAIGpWK1vhmNAAEYUP0FkezK96UXWdyVJgACaLoxG8lbsEmd - gIJQ6D6zQEAAwIAA3MAAykE"
+    photo = "AgACAgIAAxkBAAIHb2K5kQABnVBDl4V8dwUPdMn79NvhGQACtrkxG2yo0UnE1vWtfy4R-wEAAwIAA3MAAykE"
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer("Дорогие участники!\n\n"
                          "Курс Лео Шевченко 8.0 куплен.✅\n\n"
@@ -156,11 +167,10 @@ async def pay_choise(message: types.Message):
 
 @dp.message_handler(state=FSMTotalDom.total_dom_pay_choise)
 async def any_or_sbor(message: types.Message, state: FSMContext):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     prof_choise = message.text
     if prof_choise == 'Любой картой✅':
         await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".')
-        await message.reply('<a href="https://clicks.su/yoJ7R0">Оплатить 4000₽d</a>', parse_mode="HTML",
+        await message.reply('<a href="https://clicks.su/yoJ7R0">Оплатить 4000₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
     elif prof_choise == 'Тинькофф Сбор☑':
         await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".\n\n'

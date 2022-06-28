@@ -11,10 +11,10 @@ async def scan_message(msg: types.Message):
 bot_photo.jpg: 1)AgACAgIAAxkBAAIGo2K1vTRbMOUDINXa_3Hiz-seBaBXAAJlujEbyVuwSfjF4PP9_JKcAQADAgADcwADKQQ
                2)AQADZboxG8lbsEl4
 
-payments.jpg:  1)AgACAgIAAxkBAAIGpGK1vfZfbbNeuSo2DjXjsVGbniZCAAJmujEbyVuwSSWuXvTi0ugRAQADAgADcwADKQQ
+payments.jpg:  1)AgACAgIAAxkBAAIHsmK5kjXWxMDEqKIYCcfFiwOZlv8TAAJmujEbyVuwSSWuXvTi0ugRAQADAgADcwADKQQ
                2)AQADZroxG8lbsEl4
 
-top.jpg:       1)AgACAgIAAxkBAAIGpWK1vhmNAAEYUP0FkezK96UXWdyVJgACaLoxG8lbsEmd-gIJQ6D6zQEAAwIAA3MAAykE
+top.jpg:       1)AgACAgIAAxkBAAIHb2K5kQABnVBDl4V8dwUPdMn79NvhGQACtrkxG2yo0UnE1vWtfy4R-wEAAwIAA3MAAykE
                2)AQADaLoxG8lbsEl4
 
 total_dom.jpg: 1)AgACAgIAAxkBAAIGpmK1vjOALEkMtRZ_TAIdkHQ19wuHAAJpujEbyVuwSTKbFlSqplPBAQADAgADcwADKQQ
