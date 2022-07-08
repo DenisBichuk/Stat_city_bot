@@ -8,7 +8,6 @@ from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom
 
 @dp.message_handler(commands=['start'])
 async def bot_start(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     photo = config.BOT_PHOTO_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer(
