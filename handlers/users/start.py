@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from data import config
 from loader import dp, bot
 from . import start_keyboard as kb
-from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom
+from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom, FSMOzon
 
 
 @dp.message_handler(commands=['start'])
@@ -11,7 +11,7 @@ async def bot_start(message: types.Message):
     photo = config.BOT_PHOTO_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer(
-        f"Привет, {message.from_user.full_name} Рады вас видеть😊\n\nС помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
+        f"Здравствуйте {message.from_user.full_name}! Рады вас видеть😊\n\nС помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
         reply_markup=kb.start_kb)
 
 
@@ -43,11 +43,19 @@ async def about(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "Чат и отзывы👥", state='*')
 async def about(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     photo = config.BOT_PHOTO_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Для перехода в нужный раздел нажмите соответствующую кнопку:',
                          reply_markup=kb.chat_and_reviews_kb)
+
+
+@dp.message_handler(lambda message: message.text == "Обратится в поддержку✍", state='*')
+async def top(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('Вы можете написать администратору либо обратиться с вопросом в чат складчины:',
+                         reply_markup=kb.tp_kb)
 
 
 @dp.message_handler(content_types=['photo'], state='*')
@@ -60,7 +68,32 @@ async def scan_message(msg: types.Message):
     print(f'file_unique_id: {file_info.file_unique_id}')
 
 
-@dp.message_handler(lambda message: message.text == "В Топе на маркетплейс 8.0🔥", state='*')
+@dp.message_handler(lambda message: message.text == "Главное меню🗂", state='*')
+async def main_menu(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer(
+        f"Здравствуйте {message.from_user.full_name}!, Рады вас видеть😊 \n \n С помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
+        reply_markup=kb.start_kb)
+
+
+@dp.message_handler(lambda message: message.text == 'Чат👥', state='*')
+async def contact_tp(message: types.Message):
+    await message.reply('https://t.me//Stat_city_MPlac', parse_mode="HTML")
+
+
+@dp.message_handler(lambda message: message.text == 'Отзывы💬', state='*')
+async def contact_tp(message: types.Message):
+    await message.reply('https://t.me//MPHelp_Analitik_otziv', parse_mode="HTML")
+
+
+@dp.message_handler(lambda message: message.text == "Написать в тех. подержку✍", state='*')
+async def top(message: types.Message):
+    await message.answer('https://t.me/AndreasBel_MPHelp', parse_mode="HTML")
+
+
+@dp.message_handler(lambda message: message.text == "В Топе на маркетплейс 11.0🔥", state='*')
 async def top(message: types.Message):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     photo = config.TOP_ID
@@ -82,38 +115,21 @@ async def top(message: types.Message):
                          "МОДУЛЬ 8✅ - OZON ТОЖЕ КАЧНЕМ\n\n"
                          "МОДУЛЬ 9✅ - СИСТЕМАТИЗАЦИЯ БИЗНЕСА И УПРАВЛЕНИЕ КОМАНДОЙ\n\n"
                          "+ Созвоны по ZOOM\n\n"
-                         "Стоимость курса - 3500₽", reply_markup=kb.top_at_kb)
-    await FSMTop.top_pay_and_get.set()
+                         "Стоимость курса - 990₽", reply_markup=kb.top_at_kb)
+    await FSMTop.top_pay.set()
 
 
-@dp.message_handler(state=FSMTop.top_pay_and_get)
-async def pay_choise(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.PAYMENTS_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
-    await FSMTop.top_pay_choise.set()
-
-
-@dp.message_handler(state=FSMTop.top_pay_choise)
+@dp.message_handler(state=FSMTop.top_pay)
 async def any_or_sbor(message: types.Message):
-    prof_choise = message.text
-    if prof_choise == 'Любой картой✅':
-        await message.reply('Вы производите оплату курса Лео Шевченко 8.0')
-        await message.reply('<a href="https://clicks.su/mVejzQ">Оплатить 3500₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    elif prof_choise == 'Тинькофф Сбор☑':
-        await message.reply('Вы производите оплату курса Лео Шевченко 8.0"\n\n'
-                            '🚫Обязательно указать комментарий: на путешествие, на отдых\n\n'
-                            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-                            'По всем вопросам: @AndreasBel_admin')
-        await message.reply('<a href="https://clicks.su/yRjNAy">Оплатить 3500₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await message.reply('Вы производите оплату курса Лео Шевченко 11.0')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 990₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
     await FSMTop.top_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMTop.top_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMTop.top_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -123,7 +139,7 @@ async def top(message: types.Message, state: FSMContext):
                                                        f'{message.from_user.id}\n'
                                                        f'Логин: {message.from_user.username}\n'
                                                        f'Имя: {message.from_user.first_name}\n'
-                                                       f'Оплатил(а) Лео Шевченко 8.0✅')
+                                                       f'Оплатил(а) Лео Шевченко 11.0✅')
     await state.finish()
 
 
@@ -150,37 +166,20 @@ async def top(message: types.Message):
                          "🔸общие групповые созвоны\n"
                          "🔸сео оптимизация от Павла Шевченко\n"
                          "🔸итоговое мероприятие, контакты", reply_markup=kb.total_dom_kb)
-    await FSMTotalDom.total_dom_pay_and_get.set()
+    await FSMTotalDom.total_dom_pay.set()
 
 
-@dp.message_handler(state=FSMTotalDom.total_dom_pay_and_get)
-async def pay_choise(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.PAYMENTS_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
-    await FSMTotalDom.total_dom_pay_choise.set()
-
-
-@dp.message_handler(state=FSMTotalDom.total_dom_pay_choise)
+@dp.message_handler(state=FSMTotalDom.total_dom_pay)
 async def any_or_sbor(message: types.Message):
-    prof_choise = message.text
-    if prof_choise == 'Любой картой✅':
-        await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".')
-        await message.reply('<a href="https://clicks.su/yoJ7R0">Оплатить 4000₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    elif prof_choise == 'Тинькофф Сбор☑':
-        await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".\n\n'
-                            '🚫Обязательно указать комментарий: на путешествие, на отдых\n\n'
-                            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-                            'По всем вопросам: @AndreasBel_admin')
-        await message.reply('<a href="https://clicks.su/yM5vEy">Оплатить 4000₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1990₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
     await FSMTotalDom.total_dom_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMTotalDom.total_dom_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMTotalDom.total_dom_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -194,22 +193,13 @@ async def top(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(lambda message: message.text == "Обратится в поддержку✍", state='*')
-async def top(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.BOT_PHOTO_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Вы можете написать администратору либо обратиться с вопросом в чат складчины:',
-                         reply_markup=kb.tp_kb)
-
-
-@dp.message_handler(lambda message: message.text == "MPstats(Профессиональный)💹", state='*')
+@dp.message_handler(lambda message: message.text == "MPstats(Корпоративный)💹", state='*')
 async def info(message: types.Message):
     photo = config.BOT_PHOTO_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Mpstats (Тариф "Профессиональный")🚀️\n\n\n'
-                         '✔️ Тариф "Профессиональный"\n'
-                         '✔️ Цена - 2500₽ в месяц / вместо 25.000₽\n'
+    await message.answer('Mpstats (Тариф "Корпоративный")🚀️\n\n\n'
+                         '✔️ Тариф "Корпоративный"\n'
+                         '✔️ Цена - 2490₽ в месяц / вместо 25.000₽\n'
                          '✔️ Никакого графика и очередей\n\n'
                          '(Окно выборки данных: 91 день)\n\n\n'
                          '✅Пользоваться можно без ограничений\n\n'
@@ -224,37 +214,42 @@ async def info(message: types.Message):
                          "🔸Без очередей и с удобного вам браузера и устройства Macbook, IPhone, Windows, Android\n\n "
                          "🔸Не нужно скачивать никаких программ и прочих некомфортных действий",
                          reply_markup=kb.tarifs_kb)
-    await FSMProf.prof_pay_and_get.set()
+    await FSMProf.prof_duration_choise.set()
 
 
-@dp.message_handler(state=FSMProf.prof_pay_and_get)
-async def pay_choise(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.PAYMENTS_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
-    await FSMProf.prof_pay_choise.set()
+@dp.message_handler(state=FSMProf.prof_duration_choise)
+async def any_or_sbor(message: types.Message):
+    await message.reply("Выберите варинт:\n", reply_markup=kb.prof_choose_option_kb)
+    await FSMProf.prof_pay.set()
 
 
-@dp.message_handler(state=FSMProf.prof_pay_choise)
+@dp.message_handler(state=FSMProf.prof_pay)
 async def any_or_sbor(message: types.Message):
     prof_choise = message.text
-    if prof_choise == 'Любой картой✅':
-        await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.')
-        await message.reply('<a href="https://clicks.su/gx7zL1">Оплатить 2500₽</a>', parse_mode="HTML",
+    if prof_choise == 'Пробный период на две недели(1600 руб.)':
+        await message.reply('Вы производите оплату пробного периода Mpstats (Тариф "Корпоративный") на 2 недели.')
+        await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1600₽</a>', parse_mode="HTML",
                             reply_markup=kb.main_menu_kb)
-    elif prof_choise == 'Тинькофф Сбор☑':
-        await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Профессиональный") на 30 дней.\n\n'
-                            '🚫Обязательно указать комментарий: на путешествие, на отдых\n\n'
-                            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-                            'По всем вопросам: @AndreasBel_admin')
-        await message.reply('<a href="https://clicks.su/9qGqRg">Оплатить 2500₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
-    await FSMProf.prof_paid.set()
+        await FSMProf.trial.set()
+    elif prof_choise == 'Продление тарифа(2300 руб.)':
+        await message.reply('Вы производите оплату проделния доступа к сервису Mpstats (Тариф "Корпоративный").')
+        await message.reply(
+            '<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2300₽</a>',
+            parse_mode="HTML",
+            reply_markup=kb.main_menu_kb)
+        await FSMProf.extension.set()
+    elif prof_choise == 'Полный тариф на месяц(2500 руб.)':
+        await message.reply('Вы производите оплату доступа к сервису Mpstats (Тариф "Корпоративный") на 30 дней.')
+        await message.reply(
+            '<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2500₽</a>',
+            parse_mode="HTML",
+            reply_markup=kb.main_menu_kb)
+        await FSMProf.full_month.set()
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMProf.prof_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMProf.trial)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -264,7 +259,35 @@ async def top(message: types.Message, state: FSMContext):
                                                        f'{message.from_user.id}\n'
                                                        f'Логин: {message.from_user.username}\n'
                                                        f'Имя: {message.from_user.first_name}\n'
-                                                       f'Оплатил(а) Mpstats✅')
+                                                       f'Оплатил(а) пробный период Mpstats✅')
+    await state.finish()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMProf.extension)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Продлил(а) Mpstats✅')
+    await state.finish()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMProf.full_month)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) полный Mpstats✅')
     await state.finish()
 
 
@@ -275,7 +298,7 @@ async def prem_tarif(message: types.Message):
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Moneyplace (Тариф "Premium") 🚀\n\n'
                          '✔️ Тариф "Premium"\n'
-                         '✔️ Цена - 2500р в месяц\n\n'
+                         '✔️ Цена - 2200р в месяц\n\n'
                          '✔️ Никакого графика и очередей\n\n\n'
                          '✅Пользоваться можно без ограничений\n\n'
                          '✅Работает 24 часа в сутки\n\n'
@@ -288,37 +311,20 @@ async def prem_tarif(message: types.Message):
                          '🔸Без очередей и с удобного вам браузера и устройства Macbook, IPhone, Windows, Android\n\n'
                          '🔸Не нужно скачивать никаких программ и прочих некомфортных действий\n\n'
                          '🔸Наша команда гарантирует помощь при любых проблемах', reply_markup=kb.tarifs_kb)
-    await FSMPrem.prem_pay_and_get.set()
+    await FSMPrem.prem_pay.set()
 
 
-@dp.message_handler(state=FSMPrem.prem_pay_and_get)
-async def pay_choise(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.PAYMENTS_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
-    await FSMPrem.prem_pay_choise.set()
-
-
-@dp.message_handler(state=FSMPrem.prem_pay_choise)
+@dp.message_handler(state=FSMPrem.prem_pay)
 async def any_or_sbor(message: types.Message):
-    prof_choise = message.text
-    if prof_choise == 'Любой картой✅':
-        await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней.')
-        await message.reply('<a href="https://clicks.su/gx7zL1">Оплатить 2500₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    elif prof_choise == 'Тинькофф Сбор☑':
-        await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней.\n\n'
-                            '🚫Обязательно указать комментарий: на путешествие, на отдых\n\n'
-                            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-                            'По всем вопросам: @AndreasBel_admin')
-        await message.reply('<a href="https://clicks.su/9qGqRg">Оплатить 2500₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней.')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2200₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
     await FSMPrem.prem_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMPrem.prem_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMPrem.prem_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -332,14 +338,14 @@ async def top(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(lambda message: message.text == "MarketGuru(Комбинированый)📉", state='*')
+@dp.message_handler(lambda message: message.text == "MarketGuru(Профессиональный)📉", state='*')
 async def prem_tarif(message: types.Message):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
     photo = config.BOT_PHOTO_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Личный аккаунт MarketGuru по стоимости 2000₽ (вместо 11000₽)\n\n'
-                         '✔️ Тариф "Комбинированный"\n'
-                         '✔️ Цена - 2000₽ в месяц / вместо 11000₽\n'
+    await message.answer('Личный аккаунт MarketGuru по стоимости 1499₽ (вместо 6000₽)\n\n'
+                         '✔️ Тариф "Профессиональный"\n'
+                         '✔️ Цена - 1499₽ в месяц / вместо 6000₽\n'
                          '✔️ Личный аккаунт в 1 руки (полный доступ)\n\n'
                          '✅Пользоваться можно без ограничений\n\n'
                          '✅Переходите на сайт Marketguru.ru и вводите логин и пароль\n\n'
@@ -347,38 +353,20 @@ async def prem_tarif(message: types.Message):
                          '❗️Вам будет выдан личный логин и пароль, благодаря такой системе входа вы не будете вылетать и полноценно сможете пользоваться сервисом.\n\n'
                          'После оплаты с вами свяжется менеджер и проведет проверку на подставного покупателя, это происходит быстро. 😊',
                          reply_markup=kb.tarifs_kb)
-    await FSMComposite.composite_pay_and_get.set()
+    await FSMComposite.composite_pay.set()
 
 
-@dp.message_handler(state=FSMComposite.composite_pay_and_get)
-async def pay_choise(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.PAYMENTS_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('Выберите способ оплаты:', reply_markup=kb.payments_kb)
-    await FSMComposite.composite_pay_choise.set()
-
-
-@dp.message_handler(state=FSMComposite.composite_pay_choise)
+@dp.message_handler(state=FSMComposite.composite_pay)
 async def any_or_sbor(message: types.Message):
-    prof_choise = message.text
-    if prof_choise == 'Любой картой✅':
-        await message.reply('Вы производите оплату доступа к сервису MarketGuru (Тариф "Комбинированный") на 30 дней.')
-        await message.reply('<a href="https://clicks.su/gx7zL1">Оплатить 2000₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    elif prof_choise == 'Тинькофф Сбор☑':
-        await message.reply(
-            'Вы производите оплату доступа к сервису MarketGuru (Тариф "Комбинированный") на 30 дней.\n\n'
-            '🚫Обязательно указать комментарий: на путешествие, на отдых\n\n'
-            '❗️После оплаты отправьте скрин чека нам в личные сообщения 👇️\n\n'
-            'По всем вопросам: @AndreasBel_admin')
-        await message.reply('<a href="https://clicks.su/9qGqRg">Оплатить 2000₽</a>', parse_mode="HTML",
-                            reply_markup=kb.main_menu_kb)
-    await bot.send_message(chat_id=message.chat.id, text='После осуществления перевода введите слово: Оплачено 👇')
+    await message.reply('Вы производите оплату доступа к сервису MarketGuru (Тариф "Профессиональный") на 30 дней.')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1499₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
     await FSMComposite.composite_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено", state=FSMComposite.composite_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMComposite.composite_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -392,31 +380,48 @@ async def top(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(lambda message: message.text == "Главное меню🗂", state='*')
-async def main_menu(message: types.Message):
+@dp.message_handler(lambda message: message.text == "Лео Шевченко «Выход в Топ на OZON»📉", state='*')
+async def prem_tarif(message: types.Message):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.BOT_PHOTO_ID
+    photo = config.OZON_ID
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer(
-        f"Привет, Denis! Рады вас видеть😊 \n \n С помощью этого бота вы сможете получить доступ к сервису аналитики для маркетплейсов, который подходит именно вам.",
-        reply_markup=kb.start_kb)
+    await message.answer('Лео Шевченко «Выход в Топ на OZON»\n\n'
+                         '🔔 Содержание:\n\n'
+                         '✔   Модуль 1 - Основы Работы\n\n'
+                         '🎁 Бонусный модуль - Как работать с сервисом аналитики"\n\n'
+                         '✔️ Модуль 2 - Исследование рынка\n\n'
+                         '✔️ Модуль 3 - Закупка товара\n\n'
+                         '✔   Модуль 4 - Ценообразование\n\n'
+                         '✔   Модуль 5 - Идеальная карточка товара\n\n'
+                         '✔   Модуль 6 - Поставка\n\n'
+                         '✔   Модуль 7 - Финансы и документооборот\n\n'
+                         '✔   Модуль 8 - Инструменты аналитики\n\n'
+                         '✔   Модуль 9 - Масштабирование\n\n'
+                         '✔   Модуль 10 - Продвижение\n\n'
+                         '✔   Модуль 11 - Реклама\n\n',
+                         reply_markup=kb.tarifs_kb)
+    await FSMOzon.ozon_pay.set()
 
 
-@dp.message_handler(lambda message: message.text == 'Чат👥', state='*')
-async def contact_tp(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    await message.reply('<a href="https://clicks.su/ydaaKg">Chat</a>', parse_mode="HTML")
+@dp.message_handler(state=FSMOzon.ozon_pay)
+async def any_or_sbor(message: types.Message):
+    await message.reply('Вы производите оплату доступа к сервису Лео Шевченко «Выход в Топ на OZON» на 30 дней.')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1490₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                        reply_markup=kb.paid_kb)
+    await FSMOzon.ozon_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == 'Отзывы💬', state='*')
-async def contact_tp(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    await message.reply('<a href="https://clicks.su/m0xm1m">Rewievs</a>', parse_mode="HTML")
-
-
-@dp.message_handler(lambda message: message.text == "Написать в тех. подержку✍", state='*')
-async def top(message: types.Message):
-    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
-    photo = config.BOT_PHOTO_ID
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
-    await message.answer('<a href="https://clicks.su/yYllW9">Help</a>', parse_mode="HTML")
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMOzon.ozon_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) Ozon✅')
+    await state.finish()

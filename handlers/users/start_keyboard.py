@@ -1,17 +1,18 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 analitics = KeyboardButton('Выбрать сервис аналитики📊')
 about = KeyboardButton('О складчине💭')
 chat_and_reviews = KeyboardButton('Чат и отзывы👥')
 top = KeyboardButton('В Топе на маркетплейс 8.0🔥')
 total_domination = KeyboardButton('Тотальное доминирование на МП🦾🔝')
+ozon = KeyboardButton('Лео Шевченко «Выход в Топ на OZON»📉')
 need_help = KeyboardButton('Обратится в поддержку✍')
-start_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(analitics, about, chat_and_reviews, top, total_domination, need_help)
+start_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(analitics, about, chat_and_reviews, top, total_domination, ozon, need_help)
 
 
-professional = KeyboardButton('MPstats(Профессиональный)💹')
+professional = KeyboardButton('MPstats(Корпоративный)💹')
 premium = KeyboardButton('Moneyplace(Premium)📈')
-composite = KeyboardButton('MarketGuru(Комбинированый)📉')
+composite = KeyboardButton('MarketGuru(Профессиональный)📉')
 main_menu = KeyboardButton('Главное меню🗂')
 analitic_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(professional, premium, composite, main_menu)
 
@@ -43,10 +44,19 @@ go_to_tp = KeyboardButton('Обратится в поддержку✍')
 main_menu = KeyboardButton('Главное меню🗂')
 tarifs_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay_and_get, about_sklad, go_to_tp, main_menu)
 
-any_card = KeyboardButton('Любой картой✅')
-tinkoff_sbor = KeyboardButton('Тинькофф Сбор☑')
+pay = KeyboardButton('Оплатить✅')
 main_menu = KeyboardButton('Главное меню🗂')
-payments_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(any_card, tinkoff_sbor, main_menu)
+payments_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(pay, main_menu)
 
 main_menu = KeyboardButton('Главное меню🗂')
 main_menu_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(main_menu)
+
+trial = KeyboardButton('Пробный период на две недели(1600 руб.)')
+extension = KeyboardButton('Продление тарифа(2300 руб.)')
+full_month = KeyboardButton('Полный тариф на месяц(2500 руб.)')
+main_menu = KeyboardButton('Главное меню🗂')
+prof_choose_option_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(trial, extension, full_month, main_menu)
+
+paid = KeyboardButton('Оплачено✅')
+main_menu = KeyboardButton('Главное меню🗂')
+paid_kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(paid, main_menu)
