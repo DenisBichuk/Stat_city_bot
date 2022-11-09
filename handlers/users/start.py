@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from data import config
 from loader import dp, bot
 from . import start_keyboard as kb
-from .states import FSMProf, FSMPrem, FSMComposite, FSMTop, FSMTotalDom, FSMOzon
+from .states import FSMProf, FSMPrem, FSMComposite, Leo, Pavel, Elena
 
 
 @dp.message_handler(commands=['start'])
@@ -56,6 +56,24 @@ async def top(message: types.Message):
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Вы можете написать администратору либо обратиться с вопросом в чат складчины:',
                          reply_markup=kb.tp_kb)
+
+
+@dp.message_handler(lambda message: message.text == "Лео Шевченко", state='*')
+async def top(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('Выберите интересующий вас тариф:',
+                         reply_markup=kb.leo_kb)
+
+
+@dp.message_handler(lambda message: message.text == "Павел Шевченко", state='*')
+async def top(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('Выберите интересующий вас тариф:',
+                         reply_markup=kb.pavel_kb)
 
 
 @dp.message_handler(content_types=['photo'], state='*')
@@ -116,20 +134,20 @@ async def top(message: types.Message):
                          "МОДУЛЬ 9✅ - СИСТЕМАТИЗАЦИЯ БИЗНЕСА И УПРАВЛЕНИЕ КОМАНДОЙ\n\n"
                          "+ Созвоны по ZOOM\n\n"
                          "Стоимость курса - 990₽", reply_markup=kb.top_at_kb)
-    await FSMTop.top_pay.set()
+    await Leo.TopMarket.top_market_pay.set()
 
 
-@dp.message_handler(state=FSMTop.top_pay)
+@dp.message_handler(state=Leo.TopMarket.top_market_pay)
 async def any_or_sbor(message: types.Message):
     await message.reply('Вы производите оплату курса Лео Шевченко 11.0')
     await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 990₽</a>', parse_mode="HTML",
                         reply_markup=kb.main_menu_kb)
     await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
                            reply_markup=kb.paid_kb)
-    await FSMTop.top_paid.set()
+    await Leo.TopMarket.top_market_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMTop.top_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=Leo.TopMarket.top_market_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -166,20 +184,20 @@ async def top(message: types.Message):
                          "🔸общие групповые созвоны\n"
                          "🔸сео оптимизация от Павла Шевченко\n"
                          "🔸итоговое мероприятие, контакты", reply_markup=kb.total_dom_kb)
-    await FSMTotalDom.total_dom_pay.set()
+    await Pavel.TotalDom.total_dom_pay.set()
 
 
-@dp.message_handler(state=FSMTotalDom.total_dom_pay)
+@dp.message_handler(state=Pavel.TotalDom.total_dom_pay)
 async def any_or_sbor(message: types.Message):
     await message.reply('Вы производите оплату курса "Тотальное доминирование на маркетплейсах".')
     await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1990₽</a>', parse_mode="HTML",
                         reply_markup=kb.main_menu_kb)
     await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
                            reply_markup=kb.paid_kb)
-    await FSMTotalDom.total_dom_paid.set()
+    await Pavel.TotalDom.total_dom_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMTotalDom.total_dom_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=Pavel.TotalDom.total_dom_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -298,7 +316,7 @@ async def prem_tarif(message: types.Message):
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
     await message.answer('Moneyplace (Тариф "Premium") 🚀\n\n'
                          '✔️ Тариф "Premium"\n'
-                         '✔️ Цена - 2200р в месяц\n\n'
+                         '✔️ Цена - 2490р в месяц\n\n'
                          '✔️ Никакого графика и очередей\n\n\n'
                          '✅Пользоваться можно без ограничений\n\n'
                          '✅Работает 24 часа в сутки\n\n'
@@ -317,7 +335,7 @@ async def prem_tarif(message: types.Message):
 @dp.message_handler(state=FSMPrem.prem_pay)
 async def any_or_sbor(message: types.Message):
     await message.reply('Вы производите оплату доступа к сервису Moneyplace (Тариф "Premium") на 30 дней.')
-    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2200₽</a>', parse_mode="HTML",
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2490₽</a>', parse_mode="HTML",
                         reply_markup=kb.main_menu_kb)
     await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
                            reply_markup=kb.paid_kb)
@@ -400,20 +418,20 @@ async def prem_tarif(message: types.Message):
                          '✔   Модуль 10 - Продвижение\n\n'
                          '✔   Модуль 11 - Реклама\n\n',
                          reply_markup=kb.tarifs_kb)
-    await FSMOzon.ozon_pay.set()
+    await Leo.TopOzon.top_ozon_pay.set()
 
 
-@dp.message_handler(state=FSMOzon.ozon_pay)
+@dp.message_handler(state=Leo.TopOzon.top_ozon_pay)
 async def any_or_sbor(message: types.Message):
     await message.reply('Вы производите оплату доступа к сервису Лео Шевченко «Выход в Топ на OZON» на 30 дней.')
     await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 1490₽</a>', parse_mode="HTML",
                         reply_markup=kb.main_menu_kb)
     await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
-                        reply_markup=kb.paid_kb)
-    await FSMOzon.ozon_paid.set()
+                           reply_markup=kb.paid_kb)
+    await Leo.TopOzon.top_ozon_paid.set()
 
 
-@dp.message_handler(lambda message: message.text == "Оплачено✅", state=FSMOzon.ozon_paid)
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=Leo.TopOzon.top_ozon_paid)
 async def top(message: types.Message, state: FSMContext):
     admin_chat_id = config.ADMIN_ID
     date_and_time = message.date
@@ -424,4 +442,88 @@ async def top(message: types.Message, state: FSMContext):
                                                        f'Логин: {message.from_user.username}\n'
                                                        f'Имя: {message.from_user.first_name}\n'
                                                        f'Оплатил(а) Ozon✅')
+    await state.finish()
+
+
+@dp.message_handler(lambda message: message.text == 'Елена Меньшина "Азбука Масштабирования"', state="*")
+async def azbuka(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer(# "Азбука масштабирования\n"
+    #                      "1. СРАВНИТЕЛЬНЫЙ АНАЛИЗ МАРКЕТПЛЕЙСОВ ✅\n"
+    #                      "– Эволюция товарного бизнеса\n"
+    #                      "– Основы алгоритмов маркетплейсов\n"
+    #                      "– Как управлять системой\n"
+    #                      "– Позиционирование маркетплейсов\n\n\n"
+    #                      "Результат: Вы разберетесь в устройстве канала «Маркетплейсы» и будете контролировать изменения происходящие с маркетплейсами и учитывать это в своем бизнес-плане\n\n"
+    #                      "Азбука масштабирования\n"
+    #                      "2. АНАЛИЗ НИШИ И ПРОДУКТОВ ✅\n"
+    #                      "– Анализ рынка\n"
+    #                      "– Анализ целевой аудитории\n"
+    #                      "– Анализ конкурентов\n"
+    #                      "– Аудит контента\n"
+    #                      "– Анализ стратегии роста\n",
+                           "Описание будет добавлено позже."
+                           "По вопросам обращайтесь в поддержку.",
+                           reply_markup=kb.tarifs_kb)
+    await Elena.azbuka_pay.set()
+
+
+@dp.message_handler(state=Elena.azbuka_pay)
+async def any_or_sbor(message: types.Message):
+    await message.reply('Вы производите оплату доступа к сервису Елена Меньшина "Азбука масштабирования"')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 2000₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
+    await Elena.azbuka_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=Elena.azbuka_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) "Азбука Масштабирования"✅')
+    await state.finish()
+
+
+@dp.message_handler(lambda message: message.text == 'TO THE ЛЯМ🍋', state="*")
+async def azbuka(message: types.Message):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+    photo = config.BOT_PHOTO_ID
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer("Описание будет добавлено позже."
+                         "По вопросам обращайтесь в поддержку.",
+                         reply_markup=kb.tarifs_kb)
+    await Pavel.ToTheLyam.to_the_lyam_pay.set()
+
+
+@dp.message_handler(state=Pavel.ToTheLyam.to_the_lyam_pay)
+async def any_or_sbor(message: types.Message):
+    await message.reply('Вы производите оплату доступа к сервису "TO THE ЛЯМ"')
+    await message.reply('<a href="https://my.qiwi.com/Andrei-BEI4sdhfKi">Оплатить 3000₽</a>', parse_mode="HTML",
+                        reply_markup=kb.main_menu_kb)
+    await bot.send_message(chat_id=message.chat.id, text='🛑❗После осуществления нажмите кнопку: Оплачено✅ 👇🛑❗',
+                           reply_markup=kb.paid_kb)
+    await Pavel.ToTheLyam.to_the_lyam_paid.set()
+
+
+@dp.message_handler(lambda message: message.text == "Оплачено✅", state=Pavel.ToTheLyam.to_the_lyam_paid)
+async def top(message: types.Message, state: FSMContext):
+    admin_chat_id = config.ADMIN_ID
+    date_and_time = message.date
+    await message.answer('Оплата успешно произведена ✅\n\n'
+                         'Ожидайте сообщения от администратора.')
+    await bot.send_message(chat_id=admin_chat_id, text=f'Stat_city_bot, [{date_and_time}]\n'
+                                                       f'{message.from_user.id}\n'
+                                                       f'Логин: {message.from_user.username}\n'
+                                                       f'Имя: {message.from_user.first_name}\n'
+                                                       f'Оплатил(а) "TO THE ЛЯМ"✅')
     await state.finish()
